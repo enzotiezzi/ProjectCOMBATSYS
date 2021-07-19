@@ -29,7 +29,7 @@ void AAITankEnemy::BeginPlay()
 			GetBlackboardComponent()->SetValueAsVector("StartingLocation", GetCharacter()->GetActorLocation());
 			GetBlackboardComponent()->SetValueAsBool("CanJumpAttack?", false);
 
-			GetWorld()->GetTimerManager().SetTimer(JumpAttackTimerHandle, this, &AAITankEnemy::ResetJumpAttack, 5, true);
+			GetWorld()->GetTimerManager().SetTimer(JumpAttackTimerHandle, this, &AAITankEnemy::ResetJumpAttack, 10, true);
 		}
 	}
 }
