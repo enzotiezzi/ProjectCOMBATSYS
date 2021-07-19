@@ -32,4 +32,7 @@ protected:
 
 	UFUNCTION()
 	void OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+
+	struct FTimerHandle JumpAttackTimerHandle;
+	void ResetJumpAttack();
 };

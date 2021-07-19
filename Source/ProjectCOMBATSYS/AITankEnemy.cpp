@@ -5,6 +5,7 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Character.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Perception/AIPerceptionComponent.h"
 
 AAITankEnemy::AAITankEnemy()
@@ -26,6 +27,9 @@ void AAITankEnemy::BeginPlay()
 		{
 			GetBlackboardComponent()->SetValueAsObject("SelfActor", this);
 			GetBlackboardComponent()->SetValueAsVector("StartingLocation", GetCharacter()->GetActorLocation());
+			GetBlackboardComponent()->SetValueAsBool("CanJumpAttack?", false);
+
+			GetWorld()->GetTimerManager().SetTimer(JumpAttackTimerHandle, this, &AAITankEnemy::ResetJumpAttack, 5, true);
 		}
 	}
 }
@@ -33,8 +37,16 @@ void AAITankEnemy::BeginPlay()
 void AAITankEnemy::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-}
+	
+	AActor* Target = Cast<AActor>(GetBlackboardComponent()->GetValueAsObject("Target"));
 
+	if(Target)
+	{
+		FRotator LookAt = UKismetMathLibrary::FindLookAtRotation(GetPawn()->GetActorLocation(), Target->GetActorLocation());
+
+		GetPawn()->SetActorRelativeRotation(LookAt);
+	}
+}
 
 void AAITankEnemy::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
@@ -44,4 +56,11 @@ void AAITankEnemy::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus
 
 		GetBlackboardComponent()->SetValueAsObject("Target", Actor);
 	}
+}
+
+void AAITankEnemy::ResetJumpAttack()
+{
+	GEngine->AddOnScreenDebugMessage(rand(), 2, FColor::Cyan, "Reset Jump Attack");
+
+	GetBlackboardComponent()->SetValueAsBool("CanJumpAttack?", true);
 }

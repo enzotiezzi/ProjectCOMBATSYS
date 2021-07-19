@@ -22,6 +22,7 @@ ATankEnemy::ATankEnemy()
 void ATankEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
 	
 }
 
