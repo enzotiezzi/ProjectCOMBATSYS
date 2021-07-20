@@ -3,6 +3,7 @@
 
 #include "TankEnemy.h"
 
+#include "Components/TextBlock.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -28,7 +29,7 @@ void ATankEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+	SetTeam(ETeams::BLUE);
 }
 
 // Called every frame
@@ -45,3 +46,34 @@ void ATankEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 }
 
+void ATankEnemy::SetTeam(TEnumAsByte<ETeams> Team)
+{
+	this->CurrentTeamName = Team;
+
+	UUserWidget* Widget = TeamIndicatorComponent->GetWidget();
+
+	if(Widget)
+	{
+		UTextBlock* TextBlockTeam = Cast<UTextBlock>(Widget->GetWidgetFromName(TEXT("T_TeamColor")));
+		
+		if(TextBlockTeam)
+		{
+			FText TeamText;
+			FSlateColor TeamColor;
+			
+			if(Team == ETeams::BLUE)
+			{
+				TeamText = FText::FromString("TEAM BLUE");
+				TeamColor = FSlateColor(FColor::Cyan);
+			}
+			else
+			{
+				TeamText = FText::FromString("TEAM RED");
+				TeamColor = FSlateColor(FColor::Red);
+			}
+
+			TextBlockTeam->SetText(TeamText);
+			TextBlockTeam->SetColorAndOpacity(TeamColor);
+		}
+	}
+}

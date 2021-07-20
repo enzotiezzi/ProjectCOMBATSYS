@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "ETeams.h"
 #include "GameFramework/Character.h"
 #include "TankEnemy.generated.h"
 
@@ -21,7 +23,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UWidgetComponent* TeamIndicatorComponent;
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TEnumAsByte<ETeams> CurrentTeamName;
 
 public:	
 	// Called every frame
@@ -30,4 +34,5 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void SetTeam(TEnumAsByte<ETeams> Team1);
 };
