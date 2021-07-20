@@ -23,7 +23,7 @@ EBTNodeResult::Type UBTTask_StepBack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 
 		int RandomNumber = FMath::RandRange(0, 100);
 
-		if(RandomNumber <= 30)
+		if(RandomNumber <= 10)
 			return EBTNodeResult::Succeeded;
 
 		Character->PlayAnimMontage(WalkBack);

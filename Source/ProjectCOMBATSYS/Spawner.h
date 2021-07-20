@@ -38,6 +38,8 @@ protected:
 	struct FTimerHandle SpawnTimerHandle;
 	void OnSpawn();
 
+	int Index = 0;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

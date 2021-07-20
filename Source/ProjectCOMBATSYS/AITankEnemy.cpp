@@ -33,17 +33,22 @@ void AAITankEnemy::Tick(float DeltaSeconds)
 
 void AAITankEnemy::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	IKillable* Enemy = Cast<IKillable>(Actor);
+	UObject* ObjectTarget = GetBlackboardComponent()->GetValueAsObject("Target");
 
-	if(Enemy)
+	if(!ObjectTarget)
 	{
-		IKillable* ControlledAI = Cast<IKillable>(GetPawn());
+		IKillable* Enemy = Cast<IKillable>(Actor);
 
-		if(ControlledAI)
+		if(Enemy)
 		{
-			if(ControlledAI->GetCurrentTeam() != Enemy->GetCurrentTeam())
+			IKillable* ControlledAI = Cast<IKillable>(GetPawn());
+
+			if(ControlledAI)
 			{
-				GetBlackboardComponent()->SetValueAsObject("Target", Actor);
+				if(ControlledAI->GetCurrentTeam() != Enemy->GetCurrentTeam())
+				{
+					GetBlackboardComponent()->SetValueAsObject("Target", Actor);
+				}
 			}
 		}
 	}

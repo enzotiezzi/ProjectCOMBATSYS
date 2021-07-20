@@ -39,5 +39,5 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	virtual void SetTeam(TEnumAsByte<ETeams> NewTeam) override;
+	virtual void SetTeam(TEnumAsByte<ETeams> NewTeam, FString Title) override;
 };

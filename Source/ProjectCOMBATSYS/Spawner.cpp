@@ -3,6 +3,8 @@
 
 #include "Spawner.h"
 
+#include <string>
+
 #include "NavigationSystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "ProjectCOMBATSYS/TankEnemy.h"
@@ -60,7 +62,8 @@ void ASpawner::OnSpawn()
 				{
 					GEngine->AddOnScreenDebugMessage(rand(), 2, FColor::Cyan, "Spawn");
 
-					Enemy->SetTeam(SpawningTeam);
+					Index++;
+					Enemy->SetTeam(SpawningTeam, FString::FromInt(Index));
 				}
 			}
 		}

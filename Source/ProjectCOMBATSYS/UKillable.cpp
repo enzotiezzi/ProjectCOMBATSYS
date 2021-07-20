@@ -3,12 +3,12 @@
 
 #include "UKillable.h"
 
-void IKillable::SetTeam(TEnumAsByte<ETeams> NewTeam)
-{
-	this->CurrentTeam = NewTeam;
-}
-
 TEnumAsByte<ETeams> IKillable::GetCurrentTeam()
 {
 	return this->CurrentTeam;
+}
+
+void IKillable::SetTeam(TEnumAsByte<ETeams> NewTeam, FString Title)
+{
+	
 }

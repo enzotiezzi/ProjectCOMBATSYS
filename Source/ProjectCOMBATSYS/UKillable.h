@@ -16,7 +16,7 @@ class IKillable
 	GENERATED_BODY()
 
 public:
-	virtual void SetTeam(TEnumAsByte<ETeams> NewTeam);
+	virtual void SetTeam(TEnumAsByte<ETeams> NewTeam, FString Title);
 	TEnumAsByte<ETeams> GetCurrentTeam();
 
 protected:

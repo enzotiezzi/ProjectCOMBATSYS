@@ -78,7 +78,7 @@ void ATankEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 }
 
-void ATankEnemy::SetTeam(TEnumAsByte<ETeams> Team)
+void ATankEnemy::SetTeam(TEnumAsByte<ETeams> Team, FString Title)
 {
 	CurrentTeam = Team;
 
@@ -90,21 +90,18 @@ void ATankEnemy::SetTeam(TEnumAsByte<ETeams> Team)
 		
 		if(TextBlockTeam)
 		{
-			FText TeamText;
 			FSlateColor TeamColor;
 			
 			if(Team == ETeams::BLUE)
 			{
-				TeamText = FText::FromString("TEAM BLUE");
 				TeamColor = FSlateColor(FColor::Cyan);
 			}
 			else
 			{
-				TeamText = FText::FromString("TEAM RED");
 				TeamColor = FSlateColor(FColor::Red);
 			}
 
-			TextBlockTeam->SetText(TeamText);
+			TextBlockTeam->SetText(FText::FromString(Title));
 			TextBlockTeam->SetColorAndOpacity(TeamColor);
 		}
 	}
