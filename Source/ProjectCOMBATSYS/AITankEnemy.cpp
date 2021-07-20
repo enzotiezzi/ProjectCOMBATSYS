@@ -3,6 +3,7 @@
 
 #include "AITankEnemy.h"
 
+#include "UKillable.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -32,10 +33,18 @@ void AAITankEnemy::Tick(float DeltaSeconds)
 
 void AAITankEnemy::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	if(Actor->ActorHasTag("Player"))
-	{
-		GEngine->AddOnScreenDebugMessage(rand(), 2, FColor::Cyan, "Achou");
+	IKillable* Enemy = Cast<IKillable>(Actor);
 
-		GetBlackboardComponent()->SetValueAsObject("Target", Actor);
+	if(Enemy)
+	{
+		IKillable* ControlledAI = Cast<IKillable>(GetPawn());
+
+		if(ControlledAI)
+		{
+			if(ControlledAI->GetCurrentTeam() != Enemy->GetCurrentTeam())
+			{
+				GetBlackboardComponent()->SetValueAsObject("Target", Actor);
+			}
+		}
 	}
 }

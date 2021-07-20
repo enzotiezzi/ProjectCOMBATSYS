@@ -5,11 +5,12 @@
 #include "CoreMinimal.h"
 
 #include "ETeams.h"
+#include "UKillable.h"
 #include "GameFramework/Character.h"
 #include "TankEnemy.generated.h"
 
 UCLASS()
-class PROJECTCOMBATSYS_API ATankEnemy : public ACharacter
+class PROJECTCOMBATSYS_API ATankEnemy : public ACharacter, public IKillable
 {
 	GENERATED_BODY()
 
@@ -23,9 +24,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UWidgetComponent* TeamIndicatorComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TEnumAsByte<ETeams> CurrentTeamName;
 	
 	struct FTimerHandle JumpAttackTimerHandle;
 	void ResetJumpAttack();
@@ -41,6 +39,5 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	void SetTeam(TEnumAsByte<ETeams> Team1);
+	virtual void SetTeam(TEnumAsByte<ETeams> NewTeam) override;
 };

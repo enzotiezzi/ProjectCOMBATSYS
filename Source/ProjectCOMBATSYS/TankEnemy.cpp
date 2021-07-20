@@ -80,7 +80,7 @@ void ATankEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 void ATankEnemy::SetTeam(TEnumAsByte<ETeams> Team)
 {
-	this->CurrentTeamName = Team;
+	CurrentTeam = Team;
 
 	UUserWidget* Widget = TeamIndicatorComponent->GetWidget();
 

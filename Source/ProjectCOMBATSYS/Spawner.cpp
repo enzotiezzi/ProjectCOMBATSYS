@@ -54,7 +54,7 @@ void ASpawner::OnSpawn()
 			if(SpawnedActor)
 			{
 				// IMPROVE TO INTERFACE
-				ATankEnemy* Enemy = Cast<ATankEnemy>(SpawnedActor);
+				IKillable* Enemy = Cast<IKillable>(SpawnedActor);
 
 				if(Enemy)
 				{
