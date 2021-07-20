@@ -48,14 +48,12 @@ void ASpawner::OnSpawn()
 		{
 			GEngine->AddOnScreenDebugMessage(rand(), 2, FColor::Cyan, "New Location");
 
-			FRotator Rotation = GetActorRotation();
 			FActorSpawnParameters SpawnParameters;
 			
-			AActor* SpawnedActor = GetWorld()->SpawnActor<ACharacter>(CharacterToSpawn, NewLocation.Location, Rotation, SpawnParameters);
+			AActor* SpawnedActor = GetWorld()->SpawnActor<ACharacter>(CharacterToSpawn, NewLocation.Location, GetActorRotation(), SpawnParameters);
 
 			if(SpawnedActor)
 			{
-				// IMPROVE TO INTERFACE
 				IKillable* Enemy = Cast<IKillable>(SpawnedActor);
 
 				if(Enemy)
@@ -63,6 +61,7 @@ void ASpawner::OnSpawn()
 					GEngine->AddOnScreenDebugMessage(rand(), 2, FColor::Cyan, "Spawn");
 
 					Index++;
+					
 					Enemy->SetTeam(SpawningTeam, FString::FromInt(Index));
 				}
 			}
