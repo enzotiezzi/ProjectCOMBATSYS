@@ -3,9 +3,12 @@
 
 #include "TankEnemy.h"
 
+#include "AITankEnemy.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Components/TextBlock.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ATankEnemy::ATankEnemy()
@@ -29,7 +32,23 @@ void ATankEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetTeam(ETeams::BLUE);
+	AController* MyController = GetController();
+
+	if(MyController)
+	{
+		AAITankEnemy* AIController = Cast<AAITankEnemy>(MyController);
+
+		if(AIController)
+		{
+			BlackBoardComponent = AIController->GetBlackboardComponent();
+
+			BlackBoardComponent->SetValueAsObject("SelfActor", this);
+			BlackBoardComponent->SetValueAsVector("StartingLocation", GetActorLocation());
+			BlackBoardComponent->SetValueAsBool("CanJumpAttack?", false);
+
+			GetWorld()->GetTimerManager().SetTimer(JumpAttackTimerHandle, this, &ATankEnemy::ResetJumpAttack, JumpAttackCooldown, true);
+		}
+	}
 }
 
 // Called every frame
@@ -37,6 +56,19 @@ void ATankEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	UObject* ObjectTarget = BlackBoardComponent->GetValueAsObject("Target");
+
+	if(ObjectTarget)
+	{
+		AActor* Target = Cast<AActor>(ObjectTarget);
+
+		if(Target)
+		{
+			FRotator LookAt = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation());
+
+			SetActorRelativeRotation(LookAt);
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -76,4 +108,12 @@ void ATankEnemy::SetTeam(TEnumAsByte<ETeams> Team)
 			TextBlockTeam->SetColorAndOpacity(TeamColor);
 		}
 	}
+}
+
+void ATankEnemy::ResetJumpAttack()
+{
+	GEngine->AddOnScreenDebugMessage(rand(), 2, FColor::Cyan, "Reset Jump Attack");
+
+	if(BlackBoardComponent)
+		BlackBoardComponent->SetValueAsBool("CanJumpAttack?", true);
 }

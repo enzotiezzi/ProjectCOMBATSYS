@@ -26,6 +26,14 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TEnumAsByte<ETeams> CurrentTeamName;
+	
+	struct FTimerHandle JumpAttackTimerHandle;
+	void ResetJumpAttack();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float JumpAttackCooldown = 10.0f;
+
+	class UBlackboardComponent* BlackBoardComponent;
 
 public:	
 	// Called every frame
