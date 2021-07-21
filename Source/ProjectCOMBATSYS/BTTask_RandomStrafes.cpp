@@ -40,8 +40,6 @@ EBTNodeResult::Type UBTTask_RandomStrafes::ExecuteTask(UBehaviorTreeComponent& O
 
 void UBTTask_RandomStrafes::OnAnimationCompleted()
 {
-	GEngine->AddOnScreenDebugMessage(rand(), 2, FColor::Cyan, "TIMER");
-
 	if(AnimCompleteTimerHandle.IsValid())
 		GetWorld()->GetTimerManager().ClearTimer(AnimCompleteTimerHandle);
 	

@@ -5,6 +5,8 @@
 
 #include "AITankEnemy.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -38,12 +40,23 @@ ATankEnemy::ATankEnemy()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	GetMesh()->SetCanEverAffectNavigation(true);
+
+	BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+	BoxComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Ignore);
+	BoxComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	GetCapsuleComponent()->SetCapsuleRadius(10.0f);
 }
 
 // Called when the game starts or when spawned
 void ATankEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CurrentHealth = MaxHealth;
+
+	UpdateHealthBar();
 
 	AController* MyController = GetController();
 
@@ -99,7 +112,8 @@ void ATankEnemy::SetTeam(TEnumAsByte<ETeams> Team, FString Title)
 	if(Widget)
 	{
 		UTextBlock* TextBlockTeam = Cast<UTextBlock>(Widget->GetWidgetFromName(TEXT("T_TeamColor")));
-		
+		UProgressBar* ProgressBar = Cast<UProgressBar>(Widget->GetWidgetFromName("P_HeealthBar"));
+
 		if(TextBlockTeam)
 		{
 			FSlateColor TeamColor;
@@ -112,13 +126,23 @@ void ATankEnemy::SetTeam(TEnumAsByte<ETeams> Team, FString Title)
 			TextBlockTeam->SetText(FText::FromString(Title));
 			TextBlockTeam->SetColorAndOpacity(TeamColor);
 		}
+
+		if(ProgressBar)
+		{
+			FLinearColor TeamColor;
+			
+			if(Team == ETeams::BLUE)
+				TeamColor = FLinearColor(FColor::Cyan);
+			else
+				TeamColor = FLinearColor(FColor::Red);
+			
+			ProgressBar->SetFillColorAndOpacity(TeamColor);
+		}
 	}
 }
 
 void ATankEnemy::ResetJumpAttack()
 {
-	GEngine->AddOnScreenDebugMessage(rand(), 2, FColor::Cyan, "Reset Jump Attack");
-
 	if(BlackBoardComponent)
 		BlackBoardComponent->SetValueAsBool("CanJumpAttack?", true);
 }
@@ -131,7 +155,11 @@ void ATankEnemy::OnAttackComponentBeginOverlap(UPrimitiveComponent* OverlappedCo
 	{
 		if(CurrentTeam != Killable->GetCurrentTeam())
 		{
+			float Damage = FMath::RandRange(BaseDamage * 0.5f, BaseDamage * 1.1);
 			
+			Killable->Execute_ReceiveDamage(OtherActor, Damage);
+
+			DisableColliders_Implementation();
 		}
 	}
 }
@@ -166,4 +194,31 @@ void ATankEnemy::DisableColliders_Implementation()
 {
 	DisableLeftHandCollider_Implementation();
 	DisableRightHandCollider_Implementation();
+}
+
+float ATankEnemy::ReceiveDamage_Implementation(float AmountOfDamage)
+{
+	CurrentHealth -= AmountOfDamage;
+
+	UpdateHealthBar();
+
+	if(CurrentHealth <= 0.0f)
+		Destroy();
+
+	return CurrentHealth;
+}
+
+void ATankEnemy::UpdateHealthBar()
+{
+	UUserWidget* Widget = TeamIndicatorComponent->GetWidget();
+
+	if (Widget)
+	{
+		UProgressBar* ProgressBar = Cast<UProgressBar>(Widget->GetWidgetFromName("P_HeealthBar"));
+
+		if(ProgressBar)
+		{
+			ProgressBar->SetPercent(CurrentHealth/MaxHealth);
+		}
+	}
 }

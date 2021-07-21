@@ -46,8 +46,6 @@ void ASpawner::OnSpawn()
 
 		if(success)
 		{
-			GEngine->AddOnScreenDebugMessage(rand(), 2, FColor::Cyan, "New Location");
-
 			FActorSpawnParameters SpawnParameters;
 			
 			AActor* SpawnedActor = GetWorld()->SpawnActor<ACharacter>(CharacterToSpawn, NewLocation.Location, GetActorRotation(), SpawnParameters);
@@ -58,8 +56,6 @@ void ASpawner::OnSpawn()
 
 				if(Enemy)
 				{
-					GEngine->AddOnScreenDebugMessage(rand(), 2, FColor::Cyan, "Spawn");
-
 					Index++;
 					
 					Enemy->SetTeam(SpawningTeam, FString::FromInt(Index));

@@ -25,6 +25,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	float CurrentHealth;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float MaxHealth = 10;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float BaseDamage = 1;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UBoxComponent* BoxComponent;
 	
@@ -48,6 +56,8 @@ protected:
 	UFUNCTION()
 	void OnAttackComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
+	void UpdateHealthBar();
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -68,4 +78,6 @@ protected:
 	virtual void EnableColliders_Implementation() override;
 
 	virtual void DisableColliders_Implementation() override;
+
+	virtual float ReceiveDamage_Implementation(float AmountOfDamage) override;
 };

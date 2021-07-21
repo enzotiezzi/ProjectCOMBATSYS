@@ -17,7 +17,11 @@ class IKillable
 
 public:
 	virtual void SetTeam(TEnumAsByte<ETeams> NewTeam, FString Title);
+	
 	TEnumAsByte<ETeams> GetCurrentTeam();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	float ReceiveDamage(float AmountOfDamage);
 
 protected:
 	TEnumAsByte<ETeams> CurrentTeam;
